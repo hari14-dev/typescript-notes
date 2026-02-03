@@ -1,6 +1,3 @@
-// Here in this step I converts .js to .ts and checks error message by hovering (red line)
-// And then fixes it later.
-
 const menu = [
     { name: "Margherita", price: 8 },
     { name: "Pepperoni", price: 10 },
@@ -32,6 +29,13 @@ function addNewPizza(pizzaObj) {
 
 function placeOrder(pizzaName) {
     const selectedPizza = menu.find(pizzaObj => pizzaObj.name === pizzaName)
+    // Here TS shows error: ('selectedPizza' is possibly 'undefined'.)
+    // because if pizzaName doesn't exists in menu, then it is undefined and we are adding undefined with cashInRegister.
+    // So add this check to fix the issue
+    if (!selectedPizza) {
+        console.error(`${pizzaName} does not exist in the menu`)
+        return
+    }
     cashInRegister += selectedPizza.price
     const newOrder = { id: nextOrderId++, pizza: selectedPizza, status: "ordered" }
     orderQueue.push(newOrder)
