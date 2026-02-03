@@ -1,5 +1,5 @@
-// Demonstartion of improvements that our code will receive by using TS instead of JS
-// The following code consists of TypeError: Assignment to constant variable.
+// Here in this step I converts .js to .ts and checks error message by hovering (red line)
+// And then fixes it later.
 
 const menu = [
     { name: "Margherita", price: 8 },
@@ -8,8 +8,8 @@ const menu = [
     { name: "Veggie", price: 9 },
 ]
 
-const cashInRegister = 100
-const nextOrderId = 1;
+let cashInRegister = 100
+let nextOrderId = 1;
 const orderQueue = []
 
 /**
@@ -33,7 +33,6 @@ function addNewPizza(pizzaObj) {
 function placeOrder(pizzaName) {
     const selectedPizza = menu.find(pizzaObj => pizzaObj.name === pizzaName)
     cashInRegister += selectedPizza.price
-    nextOrderId++
     const newOrder = { id: nextOrderId++, pizza: selectedPizza, status: "ordered" }
     orderQueue.push(newOrder)
     return newOrder
