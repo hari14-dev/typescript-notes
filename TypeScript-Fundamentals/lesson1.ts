@@ -5,18 +5,10 @@ let myName: string = "Bob"
 let numberOfWheels: number = 4
 let isStudent: boolean = false
 
-// Custom Types
+// Optional properties
 
 type Food = string
 let favoriteFood: Food = "pizza"
-
-// we can use ',' or ';' or '' as separators in type definition
-
-// Nested Object Types
-
-// Challenge: try to figure out how to move the nested address object type
-// into a separate type definition. When done correctly, there should be no more
-// red errors in the editor
 
 type Address = {
     street: string
@@ -28,18 +20,13 @@ type Person = {
     name: string
     age: number
     isStudent: boolean
-    address: Address
+    address?: Address // optional properties require extra checks when accessing them (check that displayInfo() function)
 }
 
-let person: Person = {
+let person1: Person = {
     name: "Joe",
     age: 42,
     isStudent: true,
-    address: {
-        street: "123 Main",
-        city: "Anytown",
-        country: "USA" 
-    }
 }
 
 let person2: Person = {
@@ -52,3 +39,15 @@ let person2: Person = {
         country: "USA"
     }
 }
+
+function displayInfo(person: Person) {
+    // ofcourse we can solve this by conditional statements, but its just to demonstrate type safety
+    // so while using 'Optional properties' just makesure that it will not cause any errors
+    
+  //  console.log(`${person.name} lives at ${person.address.street}`);
+
+    // can be fixed as,
+    console.log(`${person.name} lives at ${person.address?.street}`);
+}
+
+displayInfo(person1);
