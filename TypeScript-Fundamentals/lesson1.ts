@@ -1,32 +1,27 @@
-// Typing arrays
+// Literal Types
 
-let ages: number[] = [100, 101] // ts allows only array of numbers
-// ages.push(true); this will cause an error
+// generic type (means, in this eg. it is string type that Ts lets myName to be any string)
+let myName = "Bob" // here the type shows as "string" (when you hover it)
 
-// let ages = [100, 101]; ts can also understand implicitly that, array should only be numbers.
+// literal type (Because it’s a const, TypeScript infers the string literal type "Bob", not the wider string type.)
+const myName2 = "Bob" // here the type shows as "Bob" (when you hover it)
 
-type Person = {
-    name: string
-    age: number
-    isStudent: boolean
+// Practice:
+let person: "Bob" = "Bobby" // this gives error, says it must be type "Bob"
+
+const person2: "Bob" = "Bob"
+
+
+// Unions
+
+type UserRole = "guest" | "member" | "admin"
+
+// let userRole: UserRole = "yttgg" // Type '"yttgg"' is not assignable to type 'UserRole'.
+let userRole: UserRole = "member"
+
+// Other egs.
+type User = {
+    userName: string
+    // role: UserRole (or)
+    role: "guest" | "member" | "admin"
 }
-
-let person1: Person = {
-    name: "Joe",
-    age: 42,
-    isStudent: true,
-}
-
-let person2: Person = {
-    name: "Jill",
-    age: 66,
-    isStudent: false,
-}
-
-/**
- * Challenge: create an array of people objects and
- * manually type it as an array of Person types
- */
-
-let people: Person[] = [person1, person2]
-// other way: let people: Array<Person> = [person1, person2]
