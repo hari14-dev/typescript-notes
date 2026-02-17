@@ -1,30 +1,37 @@
-type UserRole = "guest" | "member" | "admin"
+// 'any' type
+let value: any = 1
+value.toUpperCase()
+value = "Hi"
+value.map()
 
-type User = {
-    username: string
-    role: UserRole
-}
+// Important Note:
+/* 
+🧠 When should I use any?
+❌ Short answer: Avoid using any whenever possible.
 
-const users: User[] = [
-    { username: "john_doe", role: "member" },
-    { username: "jane_doe", role: "admin" },
-    { username: "guest_user", role: "guest" }
-];
+Using any:
+turns off type checking
+removes IntelliSense
+removes TypeScript safety
+makes your code behave like plain JavaScript
 
-// function return type:
-// always be explicit whenever you can, here we added type User to this function, so later in the future
-// when someone tries to change the return type like 'user.username' ts warns or tells that this function is
-// supposed to return User object. 
-// This helps in avoiding unnecessary errors in our codebase, if this function is used somewhere else
+So you lose the main benefit of TypeScript.
 
-// other definitions:
-// Always prefer explicit return types for exported / shared functions.
-// It prevents accidental return type changes and improves maintainability.
+✅ One legitimate use case
+You can use any temporarily when:
+You are migrating a large JavaScript codebase → to TypeScript
 
-function fetchUserDetails(username: string): User {
-    const user = users.find(user => user.username === username)
-    if (!user) {
-        throw new Error(`User with username ${username} not found`)
-    }
-    return user
-}
+and:
+
+you don’t have time to write proper types yet
+the types are very complex
+you just need the app to compile for now
+
+So any acts as:
+👉 a temporary escape hatch, not a real solution.
+
+⚠️ Important rule
+Use `any` as a temporary workaround — not as a final type.
+
+You should plan to replace it later with proper types.
+*/
