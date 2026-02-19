@@ -1,3 +1,4 @@
+// There are many other utility types, check those in ts documentation
 type Pizza = {
     id: number
     name: string
@@ -23,10 +24,20 @@ const menu: Pizza[] = [
 
 const orderQueue: Order[] = []
 
-// void type
-function addNewPizza(pizzaObj: Pizza): void {
-    pizzaObj.id = nextPizzaId++
-    menu.push(pizzaObj)
+/**
+ * Challenge:
+ * Fix the addNewPizza function using the Omit utility type. This might
+ * require more than just changing the "Pizza" typed `pizzaObj` parameter.
+ * Return the new pizza object (with the id added) from the function.
+ */
+
+function addNewPizza(pizzaObj: Omit<Pizza, "id">): Pizza {
+    const newPizza: Pizza = {
+        id: nextPizzaId++,
+        ...pizzaObj
+    }
+    menu.push(newPizza)
+    return newPizza
 }
 
 function placeOrder(pizzaName: string): Order | undefined {
@@ -63,28 +74,6 @@ function getPizzaDetail(identifier: string | number): Pizza | undefined {
     }
 }
 
-/**
- * Challenge part 1: Make it so we can use a global variable to track the nextPizzaId
- * and use the same trick we use with `nextOrderId++` when you're calling addNewPizza.
- * Update the menu items to use this as well so we don't have to manually enter ids 1-4
- * like we're currently doing
- */
-
-// part 1 soln:
-// addNewPizza({ id: nextPizzaId++, name: "Chicken Bacon Ranch", price: 12 })
-// addNewPizza({ id: nextPizzaId++, name: "BBQ Chicken", price: 12 })
-// addNewPizza({ id: nextPizzaId++, name: "Spicy Sausage", price: 11 })
-
-/**
- * Challenge part 1.5: Try to move the logic for adding an ID to the pizza objects 
- * inside the addNewPizza function, so that we can call addNewPizza with no id, and
- * the function will handle that part for us.
- * 
- * NOTE: you will run into TS warnings that we'll address soon, but the code should
- * still run.
- */
-
-// part 1.5 soln:
 addNewPizza({ name: "Chicken Bacon Ranch", price: 12 })
 addNewPizza({ name: "BBQ Chicken", price: 12 })
 addNewPizza({ name: "Spicy Sausage", price: 11 })
