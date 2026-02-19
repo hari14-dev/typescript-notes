@@ -1,37 +1,66 @@
-// 'any' type
-let value: any = 1
-value.toUpperCase()
-value = "Hi"
-value.map()
+type User = {
+    id: number
+    username: string
+    role: "member" | "contributor" | "admin"
+}
 
-// Important Note:
-/* 
-🧠 When should I use any?
-❌ Short answer: Avoid using any whenever possible.
+// soln 1:
+type updatedUser = {
+    id?: number
+    username?: string
+    role?: "member" | "contributor" | "admin"
+}
 
-Using any:
-turns off type checking
-removes IntelliSense
-removes TypeScript safety
-makes your code behave like plain JavaScript
+// soln 2: Partial type, which does the same thing easily
+type updatedUser1 = Partial<User>
 
-So you lose the main benefit of TypeScript.
+const users: User[] = [
+    { id: 1, username: "john_doe", role: "member" },
+    { id: 2, username: "jane_smith", role: "contributor" },
+    { id: 3, username: "alice_jones", role: "admin" },
+    { id: 4, username: "charlie_brown", role: "member" },
+];
 
-✅ One legitimate use case
-You can use any temporarily when:
-You are migrating a large JavaScript codebase → to TypeScript
+function updateUser(id: number, updates: any) {
+    // Find the user in the array by the id
+    const foundUser = users.find(user => user.id === id)
+    if(!foundUser) {
+        console.error("User not found!")
+        return
+    }
+    // Use Object.assign to update the found user in place. 
+    Object.assign(foundUser, updates)
+    // Check MDN if you need help with using Object.assign
+}
 
-and:
+// soln 1: but this is not the best way to do. We have a concept called utility types (check soln 2)
+function updateUser1(id: number, updates: updatedUser) {
+    // Find the user in the array by the id
+    const foundUser = users.find(user => user.id === id)
+    if(!foundUser) {
+        console.error("User not found!")
+        return
+    }
+    // Use Object.assign to update the found user in place. 
+    Object.assign(foundUser, updates)
+    // Check MDN if you need help with using Object.assign
+}
 
-you don’t have time to write proper types yet
-the types are very complex
-you just need the app to compile for now
+// soln 2:
+function updateUser2(id: number, updates: updatedUser1) {
+    // Find the user in the array by the id
+    const foundUser = users.find(user => user.id === id)
+    if(!foundUser) {
+        console.error("User not found!")
+        return
+    }
+    // Use Object.assign to update the found user in place. 
+    Object.assign(foundUser, updates)
+    // Check MDN if you need help with using Object.assign
+}
 
-So any acts as:
-👉 a temporary escape hatch, not a real solution.
+// Example updates:
+updateUser(1, { username: "new_john_doe" });
+updateUser(4, { role: "contributor" });
 
-⚠️ Important rule
-Use `any` as a temporary workaround — not as a final type.
-
-You should plan to replace it later with proper types.
-*/
+console.log(users)
