@@ -4,63 +4,62 @@ type User = {
     role: "member" | "contributor" | "admin"
 }
 
-// soln 1:
-type updatedUser = {
-    id?: number
-    username?: string
-    role?: "member" | "contributor" | "admin"
-}
+type UpdatedUser = Partial<User>
 
-// soln 2: Partial type, which does the same thing easily
-type updatedUser1 = Partial<User>
+let nextUserId = 1
 
 const users: User[] = [
-    { id: 1, username: "john_doe", role: "member" },
-    { id: 2, username: "jane_smith", role: "contributor" },
-    { id: 3, username: "alice_jones", role: "admin" },
-    { id: 4, username: "charlie_brown", role: "member" },
+    { id: nextUserId++, username: "john_doe", role: "member" },
+    { id: nextUserId++, username: "jane_smith", role: "contributor" }
 ];
 
-function updateUser(id: number, updates: any) {
-    // Find the user in the array by the id
+function updateUser(id: number, updates: UpdatedUser) {
     const foundUser = users.find(user => user.id === id)
-    if(!foundUser) {
+    if (!foundUser) {
         console.error("User not found!")
         return
     }
-    // Use Object.assign to update the found user in place. 
     Object.assign(foundUser, updates)
-    // Check MDN if you need help with using Object.assign
 }
 
-// soln 1: but this is not the best way to do. We have a concept called utility types (check soln 2)
-function updateUser1(id: number, updates: updatedUser) {
-    // Find the user in the array by the id
-    const foundUser = users.find(user => user.id === id)
-    if(!foundUser) {
-        console.error("User not found!")
-        return
+// updateUser(1, { username: "new_john_doe" });
+// updateUser(4, { role: "contributor" });
+
+// in order to avoid 'any' type here function addNewUser(newUser: any): User {} 
+// we can use utility type called Omit
+function addNewUser(newUser: Omit<User, 'id'>): User {
+    // Create a new variable called `user`, add an `id` property to it
+    // and spread in all the properties of the `newUser` object. Think
+    // about how you should set the type for this `user` object.
+    // Push the new object to the `users` array, and return the object
+    // from the function at the end
+    const user: User = {
+        id: nextUserId++,
+        ...newUser
     }
-    // Use Object.assign to update the found user in place. 
-    Object.assign(foundUser, updates)
-    // Check MDN if you need help with using Object.assign
+    users.push(user)
+    return user
 }
 
-// soln 2:
-function updateUser2(id: number, updates: updatedUser1) {
-    // Find the user in the array by the id
-    const foundUser = users.find(user => user.id === id)
-    if(!foundUser) {
-        console.error("User not found!")
-        return
-    }
-    // Use Object.assign to update the found user in place. 
-    Object.assign(foundUser, updates)
-    // Check MDN if you need help with using Object.assign
-}
+// example usage:
+// this gives error for missing property of role
+// only the id can be omitted when passed to function
+// addNewUser({ username: "joe_schmoe" })
 
-// Example updates:
-updateUser(1, { username: "new_john_doe" });
-updateUser(4, { role: "contributor" });
+// correct one
+addNewUser({ username: "joe_schmoe", role: "member" })
+
+// If you want to omit 'username' (omit multiple properties) also, then you can use it as
+// Omit<User, 'id' | 'username'>
+
+// ✅ General syntax of Omit in TypeScript
+// Omit<Type, Keys>
+
+// 📌 Where:
+
+// Type → the original type
+
+// Keys → the property (or properties) you want to remove
+// (must be a union of string literal keys)
 
 console.log(users)
