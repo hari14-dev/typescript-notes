@@ -49,19 +49,13 @@ function addToArray<T>(array: T[], item: T): T[] {
     return array
 }
 
-// example usage:
-addToArray(menu, {id: nextPizzaId++, name: "Chicken Bacon Ranch", price: 12 })
-addToArray(orderQueue, { id: nextOrderId++, pizza: menu[2], status: "completed" })
+/**
+ * Mini-challenge: what should be passed in as the generic type on line 57?
+ */
 
-// invalid example
-// eg1:
-// when you hover over "blah" ts says: Object literal may only specify known properties, 
-// and 'blah' does not exist in type 'Pizza'.
-addToArray(menu, {id: nextPizzaId++, name: "Chicken Bacon Ranch", price: 12, blah: "blah blah" })
-
-// eg2:
-// here the status should allow only "ordered" | "completed", but here ts doesn't shows any warnings!
-addToArray(orderQueue, { id: nextOrderId++, pizza: menu[2], status: "done" })
+addToArray<Pizza>(menu, {id: nextPizzaId++, name: "Chicken Bacon Ranch", price: 12 })
+// now ts warns about status, when you hover over it
+addToArray<Order>(orderQueue, { id: nextOrderId++, pizza: menu[2], status: "done" })
 
 console.log(menu)
 console.log(orderQueue)
