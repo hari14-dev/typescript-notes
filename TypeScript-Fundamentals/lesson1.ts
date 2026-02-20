@@ -1,65 +1,45 @@
-type User = {
-    id: number
-    username: string
-    role: "member" | "contributor" | "admin"
+// Generics
+
+const gameScores = [14, 21, 33, 42, 59]
+const favoriteThings = ["raindrops on roses", "whiskers on kittens", "bright copper kettles", "warm woolen mittens"];
+const voters = [{ name: "Alice", age: 42 }, { name: "Bob", age: 77 }]
+
+/**
+ * Challenge: figure out how to explicitly type the return value
+ * of the function!
+ */
+
+function getLastItem<Type>(array: Type[]): Type | undefined{
+    return array[array.length - 1]
 }
 
-type UpdatedUser = Partial<User>
+/**
+ * Mini-challenge: call `getLastItem` (and console.log the returned value)
+ * on each of the 3 arrays above. Hover over different values to see what the Intellisense
+ * says about the types for each one.
+ */
 
-let nextUserId = 1
+console.log(getLastItem(gameScores))
+console.log(getLastItem(favoriteThings))
+console.log(getLastItem(voters))
 
-const users: User[] = [
-    { id: nextUserId++, username: "john_doe", role: "member" },
-    { id: nextUserId++, username: "jane_smith", role: "contributor" }
-];
+/*
+Simple definition:
 
-function updateUser(id: number, updates: UpdatedUser) {
-    const foundUser = users.find(user => user.id === id)
-    if (!foundUser) {
-        console.error("User not found!")
-        return
-    }
-    Object.assign(foundUser, updates)
+Generics in TypeScript let you write a function, class, or type that works with different data types while still keeping type safety.
+
+👉 In short:
+Generics = a way to use a placeholder for a type that is decided later.
+
+One-line example:
+
+function identity<T>(value: T): T {
+  return value
 }
 
-// updateUser(1, { username: "new_john_doe" });
-// updateUser(4, { role: "contributor" });
+Here, T is the generic — the actual type (string, number, object, etc.) is provided when the function is used.
 
-// in order to avoid 'any' type here function addNewUser(newUser: any): User {} 
-// we can use utility type called Omit
-function addNewUser(newUser: Omit<User, 'id'>): User {
-    // Create a new variable called `user`, add an `id` property to it
-    // and spread in all the properties of the `newUser` object. Think
-    // about how you should set the type for this `user` object.
-    // Push the new object to the `users` array, and return the object
-    // from the function at the end
-    const user: User = {
-        id: nextUserId++,
-        ...newUser
-    }
-    users.push(user)
-    return user
-}
+Even shorter mental model:
 
-// example usage:
-// this gives error for missing property of role
-// only the id can be omitted when passed to function
-// addNewUser({ username: "joe_schmoe" })
-
-// correct one
-addNewUser({ username: "joe_schmoe", role: "member" })
-
-// If you want to omit 'username' (omit multiple properties) also, then you can use it as
-// Omit<User, 'id' | 'username'>
-
-// ✅ General syntax of Omit in TypeScript
-// Omit<Type, Keys>
-
-// 📌 Where:
-
-// Type → the original type
-
-// Keys → the property (or properties) you want to remove
-// (must be a union of string literal keys)
-
-console.log(users)
+Generics make your code reusable for many types without using any. ✅ 
+*/
