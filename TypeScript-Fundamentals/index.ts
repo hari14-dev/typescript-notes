@@ -1,4 +1,3 @@
-// There are many other utility types, check those in ts documentation
 type Pizza = {
     id: number
     name: string
@@ -16,71 +15,78 @@ let nextOrderId = 1
 let nextPizzaId = 1
 
 const menu: Pizza[] = [
-    { id: nextPizzaId++, name: "Pepperoni", price: 10 },
     { id: nextPizzaId++, name: "Margherita", price: 8 },
+    { id: nextPizzaId++, name: "Pepperoni", price: 10 },
     { id: nextPizzaId++, name: "Hawaiian", price: 10 },
     { id: nextPizzaId++, name: "Veggie", price: 9 },
 ]
 
 const orderQueue: Order[] = []
 
-/**
- * Challenge:
- * Fix the addNewPizza function using the Omit utility type. This might
- * require more than just changing the "Pizza" typed `pizzaObj` parameter.
- * Return the new pizza object (with the id added) from the function.
- */
-
-function addNewPizza(pizzaObj: Omit<Pizza, "id">): Pizza {
-    const newPizza: Pizza = {
-        id: nextPizzaId++,
-        ...pizzaObj
-    }
-    menu.push(newPizza)
-    return newPizza
+function addNewPizza(pizzaObj: Pizza): Pizza {
+    menu.push(pizzaObj)
+    return pizzaObj
 }
 
-function placeOrder(pizzaName: string): Order | undefined {
-    const selectedPizza = menu.find(pizzaObj => pizzaObj.name === pizzaName)
-    if (!selectedPizza) {
-        console.error(`${pizzaName} does not exist in the menu`)
-        return
-    }
-    cashInRegister += selectedPizza.price
-    const newOrder: Order = { id: nextOrderId++, pizza: selectedPizza, status: "ordered" }
+function placeOrder(pizza: Pizza): Order | undefined {
+    const newOrder: Order = { id: nextOrderId++, pizza: pizza, status: "ordered" }
     orderQueue.push(newOrder)
+    cashInRegister += pizza.price
     return newOrder
 }
 
+
+
+
+
+/**
+ * Challenge: add types our generic `addToArray` function. It should work
+ * for adding new pizzas to the `menu` and adding new orders to the `orderQueue`
+ */
+
+function addToArray<T>(array: T[], item: T): T[] {
+    array.push(item)
+    return array
+}
+
+// example usage:
+addToArray(menu, {id: nextPizzaId++, name: "Chicken Bacon Ranch", price: 12 })
+addToArray(orderQueue, { id: nextOrderId++, pizza: menu[2], status: "completed" })
+
+// invalid example
+// eg1:
+// when you hover over "blah" ts says: Object literal may only specify known properties, 
+// and 'blah' does not exist in type 'Pizza'.
+addToArray(menu, {id: nextPizzaId++, name: "Chicken Bacon Ranch", price: 12, blah: "blah blah" })
+
+// eg2:
+// here the status should allow only "ordered" | "completed", but here ts doesn't shows any warnings!
+addToArray(orderQueue, { id: nextOrderId++, pizza: menu[2], status: "done" })
+
+console.log(menu)
+console.log(orderQueue)
+
+
 function completeOrder(orderId: number): Order | undefined {
     const order = orderQueue.find(order => order.id === orderId)
-    if(!order) {
-       console.error(`${orderId} was not found in the orderQueue`)
-       return
-       // throw new Error(`${orderId} was not found in the orderQueue`); this alone also works!
+    if (!order) {
+        console.error(`${orderId} was not found in the orderQueue`)
+        return
     }
     order.status = "completed"
     return order
 }
 
-function getPizzaDetail(identifier: string | number): Pizza | undefined {
-    if(typeof identifier === "string") { 
-        return menu.find((pizza) => pizza.name.toLowerCase() === identifier.toLowerCase())
-    }
-    else if (typeof identifier === "number") {
+export function getPizzaDetail(identifier: string | number): Pizza | undefined {
+    if (typeof identifier === "string") {
+        return menu.find(pizza => pizza.name.toLowerCase() === identifier.toLowerCase())
+    } else if (typeof identifier === "number") {
         return menu.find(pizza => pizza.id === identifier)
     } else {
         throw new TypeError("Parameter `identifier` must be either a string or a number")
     }
 }
 
-addNewPizza({ name: "Chicken Bacon Ranch", price: 12 })
-addNewPizza({ name: "BBQ Chicken", price: 12 })
-addNewPizza({ name: "Spicy Sausage", price: 11 })
-
-placeOrder("Chicken Bacon Ranch")
-completeOrder(10)
-
-console.log("Menu:", menu)
-console.log("Cash in register:", cashInRegister)
-console.log("Order queue:", orderQueue)
+// addNewPizza({ id: nextPizzaId++, name: "Chicken Bacon Ranch", price: 12 })
+// addNewPizza({ id: nextPizzaId++, name: "BBQ Chicken", price: 12 })
+// addNewPizza({ id: nextPizzaId++, name: "Spicy Sausage", price: 11 })
